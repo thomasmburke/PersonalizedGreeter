@@ -58,5 +58,24 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
+    def describe_collection(self):
+        """
+        Summary: Describe a Rekognition Collection
+        Return: response (DICT) - response JSON from rekognition API call
+        """
+        try:
+            logger.info('Describing collection with collection ID: {0}'.format(self.collectionId))
+            response = self.rekognitionClient.describe_collection(CollectionId=self.collectionId)
+            logger.info('Status code: {0}'.format(str(response['ResponseMetadata']['HTTPStatusCode'])))
+            return response
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ResourceNotFoundException':
+                logger.error('The collection {0} was not found'.format(self.collectionId))
+            else:
+                logger.error('Error other than Not Found occurred: {0}'.format(e.response['Error']['Message']))
+            logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
+            return e.response
+
+
 if __name__=='__main__':
-    RekognitionOps().delete_collection()
+    print(RekognitionOps().describe_collection())
