@@ -4,7 +4,8 @@ import json
 import logging
 
 # Set default logging level
-logger = logging.getLogger(__name__).setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class RekognitionOps:
@@ -39,7 +40,6 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
-
     def delete_collection(self):
         """
         Summary: Delete a Rekognition Collection
@@ -58,3 +58,5 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
+if __name__=='__main__':
+    RekognitionOps().delete_collection()
