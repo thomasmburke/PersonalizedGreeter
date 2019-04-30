@@ -91,34 +91,51 @@ class RekognitionOps:
         try:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
             logger.info('Retreiving image from: {0}'.format(os.path.join(bucket,photoName)))
-            #Blob of image bytes up to 5 MBs. Add face via s3 file
+            # Add face via s3 file
             response = self.rekognitionClient.index_faces(
-            CollectionId=self.collectionId, # Collection to add the face to
-            MaxFaces=1, # Number of faces to index from the given image
-            ExternalImageId=photoName,
-            Image={
-                'S3Object': {
-                    'Bucket': bucket,
-                    'Name': photoName,
+                CollectionId=self.collectionId, # Collection to add the face to
+                MaxFaces=1, # Number of faces to index from the given image
+                ExternalImageId=photoName,
+                Image={
+                    'S3Object': {
+                        'Bucket': bucket,
+                        'Name': photoName,
+                    }
                 }
-            }
             )
             # Add face via bytes object
             response = self.rekognitionClient.index_faces(
-            CollectionId=self.collectionId, # Collection to add the face to
-            MaxFaces=1, # Number of faces to index from the given image
-            ExternalImageId=photoName,
-            Image=photoData
+                CollectionId=self.collectionId, # Collection to add the face to
+                MaxFaces=1, # Number of faces to index from the given image
+                ExternalImageId=photoName,
+                Image=photoData
             )
             #TODO: log the status code of the response
             return response
-        except Exception as e:
+        except ClientError as e:
             #TODO: catch common exception
             #TODO: catch all other exceptions
             #TODO: log the status code and error
             return e.response
 
-
+    def delete_faces_from_collection(self,faceIds):
+        """
+        Summary: Deletes faces from a collection. You specify a collection ID and an array of face IDs to remove from the collection.
+            This operation requires permissions to perform the rekognition:DeleteFaces action.
+        Params: faceIds (LIST) - An array of face IDs to delete.
+        Return: response (DICT) - response JSON from rekognition API call
+        """
+        try:
+            logging.info('Deleting the following faces from {0}\n{1}'.format(self.collectionId, faceIds))
+            response = self.rekognitionClient.delete_faces(CollectionId=self.collectionId,
+                    FaceIds=faceIds)
+            #TODO print out HTTP status code
+            return response
+        except ClientError as e:
+            #TODO: catch common exception
+            #TODO: catch all other exceptions
+            #TODO: log the status code and error
+            return e.response
 
 
 if __name__=='__main__':
