@@ -2,10 +2,12 @@ import boto3
 from botocore.exceptions import ClientError
 import json
 import logging
+import os
 
 # Set default logging level
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+#TODO: get function name in logger
 
 
 class RekognitionOps:
@@ -83,27 +85,39 @@ class RekognitionOps:
             the image itself
         Params: bucket (STRING) - name of s3 bucket
             photoName (STRING) - s3 object key name
+            photoData (Bytes) - Blob of image bytes up to 5 MBs.
+        Return response (DICT) - response JSON from rekognition API call
         """
-        # Add face via s3 file
-        response = client.index_faces(
-        CollectionId=self.collectionId, # Collection to add the face to
-        MaxFaces=1, # Number of faces to index from the given image
-        ExternalImageId=photoName,
-        Image={
-            'S3Object': {
-                'Bucket': bucket,
-                'Name': photoName,
+        try:
+            logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
+            logger.info('Retreiving image from: {0}'.format(os.path.join(bucket,photoName)))
+            #Blob of image bytes up to 5 MBs. Add face via s3 file
+            response = self.rekognitionClient.index_faces(
+            CollectionId=self.collectionId, # Collection to add the face to
+            MaxFaces=1, # Number of faces to index from the given image
+            ExternalImageId=photoName,
+            Image={
+                'S3Object': {
+                    'Bucket': bucket,
+                    'Name': photoName,
+                }
             }
-        }
-        )
+            )
+            # Add face via bytes object
+            response = self.rekognitionClient.index_faces(
+            CollectionId=self.collectionId, # Collection to add the face to
+            MaxFaces=1, # Number of faces to index from the given image
+            ExternalImageId=photoName,
+            Image=photoData
+            )
+            #TODO: log the status code of the response
+            return response
+        except Exception as e:
+            #TODO: catch common exception
+            #TODO: catch all other exceptions
+            #TODO: log the status code and error
+            return e.response
 
-        # Add face via bytes object
-        response = client.index_faces(
-        CollectionId=self.collectionId, # Collection to add the face to
-        MaxFaces=1, # Number of faces to index from the given image
-        ExternalImageId=photoName,
-        Image=photoData
-        )
 
 
 
