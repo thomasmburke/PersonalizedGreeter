@@ -76,6 +76,36 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
+    def add_face_to_collection(self, bucket, photoName, photoData):
+        """
+        Summary: This operation detects faces in an image and adds them to the specified Rekognition collection.
+            The face's feature vectors are pulled out from the the image and stored in the collection, not
+            the image itself
+        Params: bucket (STRING) - name of s3 bucket
+            photoName (STRING) - s3 object key name
+        """
+        # Add face via s3 file
+        response = client.index_faces(
+        CollectionId=self.collectionId, # Collection to add the face to
+        MaxFaces=1, # Number of faces to index from the given image
+        ExternalImageId=photoName,
+        Image={
+            'S3Object': {
+                'Bucket': bucket,
+                'Name': photoName,
+            }
+        }
+        )
+
+        # Add face via bytes object
+        response = client.index_faces(
+        CollectionId=self.collectionId, # Collection to add the face to
+        MaxFaces=1, # Number of faces to index from the given image
+        ExternalImageId=photoName,
+        Image=photoData
+        )
+
+
 
 if __name__=='__main__':
     print(RekognitionOps().describe_collection())
