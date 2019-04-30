@@ -1,6 +1,5 @@
 import boto3
 from botocore.exceptions import ClientError
-import json
 import logging
 import os
 
@@ -154,6 +153,50 @@ class RekognitionOps:
             else:
                 logger.error('Error other than Not Found occurred: {0}'.format(e.response['Error']['Message']))
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
+            return e.response
+
+    def search_faces_by_image(self, bucket photoName, photoData):
+        """
+        Summary: For a given input image, first detects the largest face in the image, and then searches the specified collection for matching faces. 
+            The operation compares the features of the input face with faces in the specified collection.
+            This operation requires permissions to perform the rekognition:SearchFacesByImage action.
+        Params: bucket (STRING) - name of s3 bucket
+            photoName (STRING) - s3 object key name
+            photoData (Bytes) - Blob of image bytes up to 5 MBs.
+        Return: response (DICT) - The response returns an array of faces that match, ordered by similarity score with the highest similarity first. 
+            More specifically, it is an array of metadata for each face match found. Along with the metadata, the response 
+            also includes a similarity indicating how similar the face is to the input face. In the response, 
+            the operation also returns the bounding box (and a confidence level that the bounding box contains a face) of 
+            the face that Amazon Rekognition used for the input image.
+        """
+        try:
+            logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
+            logger.info('Retreiving image from: {0}'.format(os.path.join(bucket,photoName)))
+            # Add face via s3 file
+            response = self.rekognitionClient.search_faces_by_image(
+                CollectionId=self.collectionId, # Collection to add the face to
+                MaxFaces=1, # Number of faces to index from the given image
+                FaceMatchThreshold=70, # Need 70% confidence in the match
+                Image={
+                    'S3Object': {
+                        'Bucket': bucket,
+                        'Name': photoName,
+                    }
+                }
+            )
+            # Add face via bytes object
+            response = self.rekognitionClient.search_faces_by_image(
+                CollectionId=self.collectionId, # Collection to add the face to
+                MaxFaces=1, # Number of faces to index from the given image
+                FaceMatchThreshold=70, # Need 70% confidence in the match
+                Image=photoData
+            )
+            #TODO: log the status code of the response
+            return response
+        except ClientError as e:
+            #TODO: catch common exception
+            #TODO: catch all other exceptions
+            #TODO: log the status code and error
             return e.response
 
 if __name__=='__main__':
