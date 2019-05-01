@@ -1,6 +1,6 @@
 # PersonalizedGreeter
 A greeting device that welcomes your friends by name the first time it sees them!
-## Desired functionality
+## Desired Functionality
 * Greet person by name after taking picture of their face
 * Include Seasonal greetings
 * Personal recorded greetings for specific people
