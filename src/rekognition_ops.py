@@ -3,16 +3,15 @@ from botocore.exceptions import ClientError
 import logging
 import os
 
-# Set default logging level
+# Set logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-# TODO: get function name in logger
 
 
 class RekognitionOps:
     """
     Rekognition: Module responsible for all AWS Rekognition operations
-    Description: Used to create and delete rekognition collections
+    Description: Used to create, delete, describe, search rekognition collections.
+        Also able to add faces, delete faces, list faces in a collection.
     Attributes: collectionId (STRING) - Used to indentify the collection to
             interact with
         rekognitionClient (boto3.client) - Used to interact directly with AWS
@@ -65,7 +64,6 @@ class RekognitionOps:
         Summary: Describe a Rekognition Collection
         Return: response (DICT) - response JSON from rekognition API call
         """
-        # TODO:CHeck that this works
         try:
             logger.info('Describing collection with collection ID: {0}'.format(self.collectionId))
             response = self.rekognitionClient.describe_collection(CollectionId=self.collectionId)
@@ -175,7 +173,9 @@ class RekognitionOps:
         Params: bucket (STRING) - name of s3 bucket
             photoName (STRING) - s3 object key name
             photoData (Bytes) - Blob of image bytes up to 5 MBs.
-        Return: response (DICT) - The response returns an array of faces that match, ordered by similarity score with the highest similarity first.
+        Return: response['FaceMatches'][0]['Face']['ExternalImageId'] (STRING) - name of the face it matches.
+            if not faces match it returns None
+        Notes: response (DICT) - The response returns an array of faces that match, ordered by similarity score with the highest similarity first.
             More specifically, it is an array of metadata for each face match found. Along with the metadata, the response
             also includes a similarity indicating how similar the face is to the input face. In the response,
             the operation also returns the bounding box (and a confidence level that the bounding box contains a face) of
@@ -185,17 +185,17 @@ class RekognitionOps:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
             logger.info('Retreiving image from: {0}'.format(os.path.join(bucket, photoName)))
             # Add face via s3 file
-            response = self.rekognitionClient.search_faces_by_image(
-                CollectionId=self.collectionId,  # Collection to add the face to
-                MaxFaces=1,  # Number of faces to index from the given image
-                FaceMatchThreshold=70,  # Need 70% confidence in the match
-                Image={
-                    'S3Object': {
-                        'Bucket': bucket,
-                        'Name': photoName,
-                    }
-                }
-            )
+            # response = self.rekognitionClient.search_faces_by_image(
+            #     CollectionId=self.collectionId,  # Collection to add the face to
+            #     MaxFaces=1,  # Number of faces to index from the given image
+            #     FaceMatchThreshold=70,  # Need 70% confidence in the match
+            #     Image={
+            #         'S3Object': {
+            #             'Bucket': bucket,
+            #             'Name': photoName,
+            #         }
+            #     }
+            # )
             # Add face via bytes object
             response = self.rekognitionClient.search_faces_by_image(
                 CollectionId=self.collectionId,  # Collection to add the face to
@@ -203,13 +203,13 @@ class RekognitionOps:
                 FaceMatchThreshold=70,  # Need 70% confidence in the match
                 Image={'Bytes': photoData}
             )
-            # TODO: log the status code of the response
-            return response
+            logger.info('Status code: {0}'.format(str(response['ResponseMetadata']['HTTPStatusCode'])))
+            if not response['FaceMatches']:
+                return None
+            return response['FaceMatches'][0]['Face']['ExternalImageId']
         except ClientError as e:
-            # TODO: catch common exception
-            # TODO: catch all other exceptions
-            # TODO: log the status code and error
-            return e.response
+            logger.error(e.response)
+            return None
 
     def get_all_face_ids(self):
         """
@@ -221,12 +221,3 @@ class RekognitionOps:
         for face in faceResponse['Faces']:
             faceIds.append(face.get('FaceId'))
         return faceIds
-
-
-if __name__ == '__main__':
-    # with open('/Users/tburke/Desktop/ThomasBurke.png', 'rb') as myFile:
-        #encoded_string = base64.b64encode(myFile.read())
-        #encoded_string = myFile.read()
-    # print(RekognitionOps().add_face_to_collection('bucket','seinfeld',encoded_string))
-    faceIds = RekognitionOps().get_all_face_ids()
-    print(RekognitionOps().delete_faces_from_collection(faceIds))
