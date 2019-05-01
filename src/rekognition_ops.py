@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class RekognitionOps:
     """
-    Rekognition: Module responsible for all AWS Rekognition operations
+    RekognitionOps: Module responsible for all AWS Rekognition operations
     Description: Used to create, delete, describe, search rekognition collections.
         Also able to add faces, delete faces, list faces in a collection.
     Attributes: collectionId (STRING) - Used to indentify the collection to
