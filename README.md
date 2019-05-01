@@ -14,3 +14,4 @@ A greeting device that welcomes your friends by name the first time it sees them
 * AWS IoT
 * Raspberry pi
 * AWS Lambda
+* AWS CloudFront
