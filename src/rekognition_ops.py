@@ -91,30 +91,34 @@ class RekognitionOps:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
             logger.info('Retreiving image from: {0}'.format(os.path.join(bucket,photoName)))
             # Add face via s3 file
-            response = self.rekognitionClient.index_faces(
-                CollectionId=self.collectionId, # Collection to add the face to
-                MaxFaces=1, # Number of faces to index from the given image
-                ExternalImageId=photoName,
-                Image={
-                    'S3Object': {
-                        'Bucket': bucket,
-                        'Name': photoName,
-                    }
-                }
-            )
+            # response = self.rekognitionClient.index_faces(
+            #     CollectionId=self.collectionId, # Collection to add the face to
+            #     MaxFaces=1, # Number of faces to index from the given image
+            #     ExternalImageId=photoName,
+            #     Image={
+            #         'S3Object': {
+            #             'Bucket': bucket,
+            #             'Name': photoName,
+            #         }
+            #     }
+            # )
             # Add face via bytes object
             response = self.rekognitionClient.index_faces(
                 CollectionId=self.collectionId, # Collection to add the face to
                 MaxFaces=1, # Number of faces to index from the given image
                 ExternalImageId=photoName,
-                Image=photoData
+                Image={'Bytes': photoData}
             )
-            #TODO: log the status code of the response
+            logger.info('Status code: {0}'.format(str(response['ResponseMetadata']['HTTPStatusCode'])))
+            # If no faces were added ensure that this is logged
+            if not response['FaceRecords']: logger.warning('No Face was added from image {0}'.format(photoName))
             return response
         except ClientError as e:
-            #TODO: catch common exception
-            #TODO: catch all other exceptions
-            #TODO: log the status code and error
+            if e.response['Error']['Code'] == 'ResourceNotFoundException':
+                logger.error('The collection {0} was not found'.format(self.collectionId))
+            else:
+                logger.error('Error other than Not Found occurred: {0}'.format(e.response['Error']['Message']))
+            logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
     def delete_faces_from_collection(self,faceIds):
@@ -128,12 +132,14 @@ class RekognitionOps:
             logging.info('Deleting the following faces from {0}\n{1}'.format(self.collectionId, faceIds))
             response = self.rekognitionClient.delete_faces(CollectionId=self.collectionId,
                     FaceIds=faceIds)
-            #TODO print out HTTP status code
+            logger.info('Status code: {0}'.format(str(response['ResponseMetadata']['HTTPStatusCode'])))
             return response
         except ClientError as e:
-            #TODO: catch common exception
-            #TODO: catch all other exceptions
-            #TODO: log the status code and error
+            if e.response['Error']['Code'] == 'ResourceNotFoundException':
+                logger.error('The collection {0} was not found'.format(self.collectionId))
+            else:
+                logger.error('Error other than Not Found occurred: {0}'.format(e.response['Error']['Message']))
+            logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
     def list_faces(self):
@@ -145,7 +151,7 @@ class RekognitionOps:
         try:
             logger.info('Listing faces in collection: {0}'.format(self.collectionId))
             response = self.rekognitionClient.list_faces(CollectionId=self.collectionId)
-            logger.info('Status code: {0}'.format(str(response['StatusCode'])))
+            logger.info('Status code: {0}'.format(str(response['ResponseMetadata']['HTTPStatusCode'])))
             return response
         except ClientError as e:
             if e.response['Error']['Code'] == 'ResourceNotFoundException':
@@ -155,7 +161,7 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
-    def search_faces_by_image(self, bucket photoName, photoData):
+    def search_faces_by_image(self, bucket, photoName, photoData):
         """
         Summary: For a given input image, first detects the largest face in the image, and then searches the specified collection for matching faces. 
             The operation compares the features of the input face with faces in the specified collection.
@@ -189,7 +195,7 @@ class RekognitionOps:
                 CollectionId=self.collectionId, # Collection to add the face to
                 MaxFaces=1, # Number of faces to index from the given image
                 FaceMatchThreshold=70, # Need 70% confidence in the match
-                Image=photoData
+                Image={'Bytes': photoData}
             )
             #TODO: log the status code of the response
             return response
@@ -199,5 +205,14 @@ class RekognitionOps:
             #TODO: log the status code and error
             return e.response
 
+    def get_all_face_ids(self):
+        """
+        """
+        pass
+
 if __name__=='__main__':
-    print(RekognitionOps().describe_collection())
+    with open('/Users/tburke/Desktop/ThomasBurke.png','rb') as myFile:
+        #encoded_string = base64.b64encode(myFile.read())
+        encoded_string = myFile.read()
+    #print(RekognitionOps().add_face_to_collection('bucket','seinfeld',encoded_string))
+    print(RekognitionOps().list_faces())
