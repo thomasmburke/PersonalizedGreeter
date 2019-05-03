@@ -15,3 +15,5 @@ A greeting device that welcomes your friends by name the first time it sees them
 * Raspberry pi
 * AWS Lambda
 * AWS CloudFront
+## Overview of Application Architecture
+![alt text](https://github.com/thomasmburke/PersonalizedGreeter/blob/master/docs/PersonalizedGreeter_Application_Architecture.png)
