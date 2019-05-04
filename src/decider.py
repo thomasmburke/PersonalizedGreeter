@@ -3,9 +3,9 @@ import io
 from rekognition_ops import RekognitionOps
 from polly_ops import PollyOps
 from camera_ops import CameraOps
-#from speaker_ops import SpeakerOps
+from speaker_ops import SpeakerOps
 
-class Decider(CameraOps, RekognitionOps):
+class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
     """
     Decider: This module is responsible for calling all other modules and acts
         as the orchestrator. Upon detection it will take a picture, find out
@@ -23,10 +23,14 @@ class Decider(CameraOps, RekognitionOps):
         # Find the name of the person in the picture
         personName = self.search_faces_by_image('bucket','photoName', photoStream.getvalue())
         photoStream.close()
-        return personName
+        print(personName)
         # Look up a custom greeting for the user
         # Turn the greeting into a speech stream
+        greetingStream = self.synthesize_speech(text=personName)
         # Say greeting to user
+        self.play_audio_stream(greetingStream['AudioStream'])
+        return personName
+
 
 
 if __name__=='__main__':

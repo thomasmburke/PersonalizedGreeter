@@ -36,7 +36,7 @@ class PollyOps:
 if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
-    response = PollyOps().synthesize_speech(text='All Gaul is divided into three parts')
+    response = PollyOps().synthesize_speech(text='ThomasBurke')
     print(response)
     audio = io.BytesIO(response['AudioStream'].read())
     pygame.mixer.music.load(audio)
