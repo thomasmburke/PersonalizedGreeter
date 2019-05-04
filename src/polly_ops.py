@@ -18,7 +18,7 @@ class PollyOps:
     def __init__(self):
         self.pollyClient = boto3.client('polly')
 
-    def synthesize_speech(self):
+    def synthesize_speech(self, text):
         """
         Summary: Convert text or SSML to speech
         """
@@ -26,7 +26,7 @@ class PollyOps:
             logger.info('Calling Polly to do TTS...')
             response = self.pollyClient.synthesize_speech(
                 OutputFormat='ogg_vorbis',
-                Text='All Gaul is divided into three parts',
+                Text=text,
                 VoiceId='Joanna')
             return response
         except ClientError as e:
@@ -36,7 +36,7 @@ class PollyOps:
 if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
-    response = PollyOps().synthesize_speech()
+    response = PollyOps().synthesize_speech(text='All Gaul is divided into three parts')
     print(response)
     audio = io.BytesIO(response['AudioStream'].read())
     pygame.mixer.music.load(audio)
