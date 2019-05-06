@@ -90,18 +90,6 @@ class RekognitionOps:
         try:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
             logger.info('Retreiving image from: {0}'.format(os.path.join(bucket, photoName)))
-            # Add face via s3 file
-            # response = self.rekognitionClient.index_faces(
-            #     CollectionId=self.collectionId, # Collection to add the face to
-            #     MaxFaces=1, # Number of faces to index from the given image
-            #     ExternalImageId=photoName,
-            #     Image={
-            #         'S3Object': {
-            #             'Bucket': bucket,
-            #             'Name': photoName,
-            #         }
-            #     }
-            # )
             # Add face via bytes object
             response = self.rekognitionClient.index_faces(
                 CollectionId=self.collectionId,  # Collection to add the face to
@@ -184,18 +172,6 @@ class RekognitionOps:
         try:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
             logger.info('Retreiving image from: {0}'.format(os.path.join(bucket, photoName)))
-            # Add face via s3 file
-            # response = self.rekognitionClient.search_faces_by_image(
-            #     CollectionId=self.collectionId,  # Collection to add the face to
-            #     MaxFaces=1,  # Number of faces to index from the given image
-            #     FaceMatchThreshold=70,  # Need 70% confidence in the match
-            #     Image={
-            #         'S3Object': {
-            #             'Bucket': bucket,
-            #             'Name': photoName,
-            #         }
-            #     }
-            # )
             # Add face via bytes object
             response = self.rekognitionClient.search_faces_by_image(
                 CollectionId=self.collectionId,  # Collection to add the face to
