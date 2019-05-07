@@ -88,7 +88,7 @@ class RekognitionOps:
         """
         try:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
-            logger.info('Retreiving image from: {0}'.format(os.path.join(bucket, photoName)))
+            logger.info('Adding {0} to Face Collection'.format(photoName))
             # Add face via bytes object
             response = self.rekognitionClient.index_faces(
                 CollectionId=self.collectionId,  # Collection to add the face to
@@ -152,13 +152,12 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
-    def search_faces_by_image(self, photoName, photoData):
+    def search_faces_by_image(self, photoData):
         """
         Summary: For a given input image, first detects the largest face in the image, and then searches the specified collection for matching faces.
             The operation compares the features of the input face with faces in the specified collection.
             This operation requires permissions to perform the rekognition:SearchFacesByImage action.
-        Params: photoName (STRING) - person's name
-            photoData (Bytes) - Blob of image bytes up to 5 MBs.
+        Params: photoData (Bytes) - Blob of image bytes up to 5 MBs.
         Return: response['FaceMatches'][0]['Face']['ExternalImageId'] (STRING) - name of the face it matches.
             if not faces match it returns None
         Notes: response (DICT) - The response returns an array of faces that match, ordered by similarity score with the highest similarity first.
@@ -169,7 +168,6 @@ class RekognitionOps:
         """
         try:
             logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
-            logger.info('Retreiving image from: {0}'.format(os.path.join(bucket, photoName)))
             # Add face via bytes object
             response = self.rekognitionClient.search_faces_by_image(
                 CollectionId=self.collectionId,  # Collection to add the face to
