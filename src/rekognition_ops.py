@@ -77,13 +77,12 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
-    def add_face_to_collection(self, bucket, photoName, photoData):
+    def add_face_to_collection(self, photoName, photoData):
         """
         Summary: This operation detects faces in an image and adds them to the specified Rekognition collection.
             The face's feature vectors are pulled out from the the image and stored in the collection, not
             the image itself
-        Params: bucket (STRING) - name of s3 bucket
-            photoName (STRING) - s3 object key name
+        Params: photoName (STRING) - person's name
             photoData (Bytes) - Blob of image bytes up to 5 MBs.
         Return response (DICT) - response JSON from rekognition API call
         """
@@ -153,13 +152,12 @@ class RekognitionOps:
             logger.error('Operation returned status code: {}'.format(e.response['ResponseMetadata']['HTTPStatusCode']))
             return e.response
 
-    def search_faces_by_image(self, bucket, photoName, photoData):
+    def search_faces_by_image(self, photoName, photoData):
         """
         Summary: For a given input image, first detects the largest face in the image, and then searches the specified collection for matching faces.
             The operation compares the features of the input face with faces in the specified collection.
             This operation requires permissions to perform the rekognition:SearchFacesByImage action.
-        Params: bucket (STRING) - name of s3 bucket
-            photoName (STRING) - s3 object key name
+        Params: photoName (STRING) - person's name
             photoData (Bytes) - Blob of image bytes up to 5 MBs.
         Return: response['FaceMatches'][0]['Face']['ExternalImageId'] (STRING) - name of the face it matches.
             if not faces match it returns None
