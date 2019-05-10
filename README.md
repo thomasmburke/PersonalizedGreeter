@@ -15,5 +15,14 @@ A greeting device that welcomes your friends by name the first time it sees them
 * Raspberry pi
 * AWS Lambda
 * AWS CloudFront
+## Materials Used
+* Raspberry Pi 3B [$30]
+* 5V 2.5A Switching Power Supply with 20AWG MicroUSB cable [$7.50]
+* 32GB Class 10 SD card [$5]
+* Raspberry Pi case base [$5]
+* Mini external USB stereo speaker [$12.50]
+* Raspberry Pi Camera Board v2 [$29.95]
+### Overall Cost
+$89.95 - Honestly not a bad price for a prototype
 ## Overview of Application Architecture
 ![alt text](https://github.com/thomasmburke/PersonalizedGreeter/blob/master/docs/PersonalizedGreeter_Application_Architecture.png)
