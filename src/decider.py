@@ -21,7 +21,7 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         # Call the camera module to take a picture
         photoStream = self.take_picture()
         # Find the name of the person in the picture
-        personName = self.search_faces_by_image('bucket','photoName', photoStream.getvalue())
+        personName = self.search_faces_by_image(photoStream.getvalue())
         photoStream.close()
         print(personName)
         # Look up a custom greeting for the user

@@ -15,13 +15,9 @@ class SpeakerOps:
         pygame.init() # may want to initialize once in the detector
         pygame.mixer.init() # may want to initialize once in the detector
         audio = io.BytesIO(audioStream.read())
-        self.play_audio(audio)
-        pygame.mixer.quit()
-        pygame.quit()
-
-    # Here we play the audio stream
-    def play_audio(self, audio):
         pygame.mixer.music.load(audio)
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
+        pygame.mixer.quit()
+        pygame.quit()
