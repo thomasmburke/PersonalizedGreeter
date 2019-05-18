@@ -19,10 +19,12 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
 
     def orchestrate(self):
         # Call the camera module to take a picture
-        photoStream = self.take_picture()
+        #photoStream = self.take_picture()
+        photoStream = self.detect_face()
         # Find the name of the person in the picture
-        personName = self.search_faces_by_image(photoStream.getvalue())
-        photoStream.close()
+        #personName = self.search_faces_by_image(photoStream.getvalue())
+        personName = self.search_faces_by_image(photoStream)
+        #photoStream.close()
         print(personName)
         # Look up a custom greeting for the user
         # Turn the greeting into a speech stream
