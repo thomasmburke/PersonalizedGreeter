@@ -1,5 +1,6 @@
 import logging
 import io
+import sys
 from rekognition_ops import RekognitionOps
 from polly_ops import PollyOps
 from camera_ops import CameraOps
@@ -19,7 +20,6 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
 
     def orchestrate(self):
         # Call the camera module to take a picture
-        #photoStream = self.take_picture()
         photoStream = self.detect_face()
         # Find the name of the person in the picture
         #personName = self.search_faces_by_image(photoStream.getvalue())
@@ -31,11 +31,17 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         greetingStream = self.synthesize_speech(text=personName)
         # Say greeting to user
         self.play_audio_stream(greetingStream['AudioStream'])
-        return personName
+        return self.orchestrate()
 
 
 
 if __name__=='__main__':
+    # Set default logging level
+    logging.basicConfig(
+        stream=sys.stdout,
+        level=logging.INFO,
+        format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+        datefmt='%Y-%m-%dT%H:%M:%S')
     obj = Decider()
     print(obj.orchestrate())
 
