@@ -22,10 +22,8 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         # Call the camera module to take a picture
         photoStream = self.detect_face()
         # Find the name of the person in the picture
-        #personName = self.search_faces_by_image(photoStream.getvalue())
         personName = self.search_faces_by_image(photoStream)
-        #photoStream.close()
-        print(personName)
+        logger.info('Name of person identified={}'.format(personName))
         # Look up a custom greeting for the user
         # Turn the greeting into a speech stream
         greetingStream = self.synthesize_speech(text=personName)
