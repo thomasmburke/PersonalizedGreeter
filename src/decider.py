@@ -6,6 +6,9 @@ from polly_ops import PollyOps
 from camera_ops import CameraOps
 from speaker_ops import SpeakerOps
 
+# Set logger
+logger = logging.getLogger(__name__)
+
 class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
     """
     Decider: This module is responsible for calling all other modules and acts
