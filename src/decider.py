@@ -20,6 +20,7 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         RekognitionOps.__init__(self)
         CameraOps.__init__(self)
         PollyOps.__init__(self)
+        SpeakerOps.__init__(self)
 
     def orchestrate(self):
         # Call the camera module to take a picture
