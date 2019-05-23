@@ -16,16 +16,14 @@ class CameraOps:
     def __init__(self):
         self.fileFormat = '.jpg'
         self.vs = VideoStream(usePiCamera=True).start()
+        # Start frame per second counter
         self.fps = FPS().start()
         logger.info('Waiting for camera to warmup...')
         sleep(2)
 
     def detect_face(self):
         detector = cv2.CascadeClassifier('../HaarCascade/haarcascade_frontalface_default.xml')
-        logger.info('Starting video stream...')
-        #vs = VideoStream(usePiCamera=True).start()
-        # Start frame per second counter
-        #fps = FPS().start()
+        logger.info('Resuming video stream...')
         
         while True:
             frame = self.vs.read()
