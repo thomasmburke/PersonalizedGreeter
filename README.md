@@ -11,10 +11,8 @@ A greeting device that welcomes your friends by name the first time it sees them
 ## Technology Leveraged
 * AWS Rekognition
 * AWS Polly
-* AWS IoT
 * Raspberry pi
-* AWS Lambda
-* AWS CloudFront
+* GCP Compute Engine + Redis
 ## Materials Used
 * Raspberry Pi 3B [$30]
 * 5V 2.5A Switching Power Supply with 20AWG MicroUSB cable [$7.50]
