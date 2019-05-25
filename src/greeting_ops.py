@@ -1,6 +1,7 @@
 import redis
 import logging
 import datetime
+import os
 
 # Set logger
 logger = logging.getLogger(__name__)
@@ -14,10 +15,20 @@ class GreetingOps:
     def get_greeting(self, personName):
         logger.info('Entering the greeting retrieval method...')
         personalizedGreeting = self.redisClient.srandmember(personName)
-        if personalizedGreeting: return personalizedGreeting
+        if personalizedGreeting:
+            personalizedGreetingWithName = personalizedGreeting.format(personName)
+            logger.info('Retrieved personalized greeting: {}'.format(personalizedGreetingWithName))
+            return personalizedGreetingWithName
         seasonalGreeting = self.redisClient.srandmember(datetime.datetime.today().strftime('%Y-%m-%d'))
-        if seasonalGreeting: return seasonalGreeting
-        else: return self.redisClient.srandmember(self.defaultGreetings)
+        if seasonalGreeting: 
+            seasonalGreetingWithName = seasonalGreeting.format(personName)
+            logger.info('Retrieved seasonal greeting: {}'.format(seasonalGreetingWithName))
+            return seasonalGreetingWithName
+        else: 
+            defaultGreeting = self.redisClient.srandmember(self.defaultGreetings)
+            defaultGreetingWithName = defaultGreeting.format(personName)
+            logger.info('Retrieved default greeting: {}'.format(defaultGreetingWithName))
+            return defaultGreetingWithName
 
 
 if __name__=='__main__':
