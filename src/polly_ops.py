@@ -1,8 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
 import logging
-import io
-import pygame
 
 # Set logger
 logger = logging.getLogger(__name__)
@@ -27,19 +25,14 @@ class PollyOps:
             response = self.pollyClient.synthesize_speech(
                 OutputFormat='ogg_vorbis',
                 Text=text,
-                VoiceId='Joanna')
+                VoiceId='Joanna',
+                TextType='ssml')
             return response
         except ClientError as e:
             return e.response
 
 
 if __name__ == '__main__':
-    pygame.init()
-    pygame.mixer.init()
-    response = PollyOps().synthesize_speech(text='ThomasBurke')
-    print(response)
-    audio = io.BytesIO(response['AudioStream'].read())
-    pygame.mixer.music.load(audio)
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-        pygame.time.Clock().tick(10)
+    from speaker_ops import SpeakerOps
+    response = PollyOps().synthesize_speech(text="""<speak>Want to hear Victoria's Secret? <break time='1s'/><amazon:effect name='whispered'>She has a crush on {}</amazon:effect></speak>""".format('Thomas Burke'))
+    SpeakerOps().play_audio_stream(response['AudioStream'])
