@@ -29,17 +29,17 @@ class GreetingOps:
         logger.info('Entering the greeting retrieval method...')
         personalizedGreeting = self.redisClient.srandmember(personName)
         if personalizedGreeting:
-            personalizedGreetingWithName = personalizedGreeting.format(personName)
+            personalizedGreetingWithName = personalizedGreeting.decode('utf-8').format(personName)
             logger.info('Retrieved personalized greeting: {}'.format(personalizedGreetingWithName))
             return personalizedGreetingWithName
         seasonalGreeting = self.redisClient.srandmember(datetime.datetime.today().strftime('%Y-%m-%d'))
         if seasonalGreeting: 
-            seasonalGreetingWithName = seasonalGreeting.format(personName)
+            seasonalGreetingWithName = seasonalGreeting.decode('utf-8').format(personName)
             logger.info('Retrieved seasonal greeting: {}'.format(seasonalGreetingWithName))
             return seasonalGreetingWithName
         else: 
             defaultGreeting = self.redisClient.srandmember(self.defaultGreetings)
-            defaultGreetingWithName = defaultGreeting.format(personName)
+            defaultGreetingWithName = defaultGreeting.decode('utf-8').format(personName)
             logger.info('Retrieved default greeting: {}'.format(defaultGreetingWithName))
             return defaultGreetingWithName
 
