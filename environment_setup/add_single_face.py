@@ -11,7 +11,7 @@ if __name__ == '__main__':
         level=logging.INFO,
         format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
-    name = 'HannahSugrue'
+    name = ''
     with open('/Users/tburke/Desktop/facebook_pics/{}.jpg'.format(name), 'rb') as myFile:
         encoded_string = myFile.read()
         RekognitionOps().add_face_to_collection(name, encoded_string)
