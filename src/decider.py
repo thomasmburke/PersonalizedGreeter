@@ -1,15 +1,15 @@
 import logging
-import io
 import sys
 from rekognition_ops import RekognitionOps
 from polly_ops import PollyOps
 from camera_ops import CameraOps
 from speaker_ops import SpeakerOps
+from greeting_ops import GreetingOps
 
 # Set logger
 logger = logging.getLogger(__name__)
 
-class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
+class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps,GreetingOps):
     """
     Decider: This module is responsible for calling all other modules and acts
         as the orchestrator. Upon detection it will take a picture, find out
@@ -21,6 +21,7 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         CameraOps.__init__(self)
         PollyOps.__init__(self)
         SpeakerOps.__init__(self)
+        GreetingOps.__init__(self)
 
     def orchestrate(self):
         # Call the camera module to take a picture
@@ -29,11 +30,12 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps):
         personName = self.search_faces_by_image(faceFrame)
         if not personName: return None
         logger.info('Name of person identified={}'.format(personName))
-        # Look up a custom greeting for the user
+        # Look up a custom greeting for the guest
+        greeting = self.get_greeting(personName)
         # Turn the greeting into a speech stream
-        greetingStream = self.synthesize_speech(text=personName)
+        greetingAudio = self.synthesize_speech(text=greeting)
         # Say greeting to user
-        self.play_audio_stream(greetingStream['AudioStream'])
+        self.play_audio_stream(greetingAudio['AudioStream'])
         return personName
 
 
