@@ -1,13 +1,20 @@
 # PersonalizedGreeter
 A greeting device that welcomes your friends by name the first time it sees them!
-## Desired Functionality
-* Greet person by name after taking picture of their face
+## Setup
+* Requires Raspberry pi with raspbian jessie OS 
+* Follow all steps listed in the environment_setup/raspberry_pi_setup.sh
+* Setup a Redis on Google compute engine
+* In your virtual environment run the following command after cloning the repo:
+```pip3 install -r requirements.txt```
+## Current Functionality
+* Greet person by name after detecting their face in a frame of the continuous video stream
+* Greet with joke/fact option
+## Future Functionality
 * Include Seasonal greetings
 * Personal recorded greetings for specific people
 * Walk up music for specific people
     * Prompt people to pick their walk up music
 * Group names for when it detects a set of people that associate to one name
-* Greet with joke/fact option
 ## Technology Leveraged
 * AWS Rekognition
 * AWS Polly
