@@ -1,5 +1,6 @@
 import logging
 import sys
+import datetime
 from rekognition_ops import RekognitionOps
 from polly_ops import PollyOps
 from camera_ops import CameraOps
@@ -48,5 +49,19 @@ if __name__=='__main__':
         format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
     obj = Decider()
-    while True: obj.orchestrate()
+    dayCnt = 0
+    day = datetime.datetime.today().strftime('%Y-%m-%d')
+    while True: 
+        if day != datetime.datetime.today().strftime('%Y-%m-%d'):
+            day = datetime.datetime.today().strftime('%Y-%m-%d')
+            dayCnt = 0
+            logger.info('rekognized the start of a new day: {0} and resetting day count to {1}'.format(day, dayCnt))
+        # Used to make the application stay free of AWS charges
+        if dayCnt <= 160:
+            obj.orchestrate()
+            dayCnt += 1
+            logger.info('Total number of faces recokognized today={} of 160 that are allowed per day'.format(dayCnt))
+            logger.info('Todays face rekognition count is for this day: {}'.format(day))
+        else:
+            logger.warning('Total Usage for the day has been exceeded!')
 
