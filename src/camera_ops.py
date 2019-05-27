@@ -4,6 +4,7 @@ from imutils.video import VideoStream, FPS
 import cv2
 import imutils
 import logging
+import os
 
 # Set logger
 logger = logging.getLogger(__name__)
@@ -22,7 +23,9 @@ class CameraOps:
         sleep(2)
 
     def detect_face(self):
-        detector = cv2.CascadeClassifier('../HaarCascade/haarcascade_frontalface_default.xml')
+        haarCascadePath = os.path.dirname(__file__) + '/../HaarCascade/haarcascade_frontalface_default.xml'
+        logger.info('haar cascade path: {}'.format(haarCascadePath))
+        detector = cv2.CascadeClassifier(haarCascadePath)
         logger.info('Resuming video stream...')
         
         while True:
@@ -32,10 +35,9 @@ class CameraOps:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # Detect faces from grayscale frame
             faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(55,55))
-            #print(faceRects)
-            logger.info('face localized at the following location {}'.format(faceRects))
             # Check if there are any faces in the current frame
             if len(faceRects):
+                logger.info('face localized at the following location {}'.format(faceRects))
                 # Show photo if pi has display
                 #cv2.imshow("Frame", frame)
                 #key = cv2.waitKey(1) & 0xFF
