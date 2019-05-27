@@ -31,3 +31,6 @@ A greeting device that welcomes your friends by name the first time it sees them
 $89.95 - Honestly not a bad price for a prototype
 ## Overview of Application Architecture
 ![alt text](https://github.com/thomasmburke/PersonalizedGreeter/blob/master/docs/PersonalizedGreeter_Application_Architecture.png)
+## Greeter in action!
+[Personalized Greeter Video Demo](https://www.youtube.com/watch?v=Obe1vZKrkWw)
+[![Personalized Greeter Video Demo](https://i.imgur.com/cKCdC3d.png)](https://www.youtube.com/watch?v=Obe1vZKrkWw "Personalized Greeter Video Demo")
