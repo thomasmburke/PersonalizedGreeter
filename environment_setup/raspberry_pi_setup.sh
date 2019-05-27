@@ -1,10 +1,12 @@
 # When using a virtualenv I encountered issues importing the following python
 # libraries without the dependecies found below
-
 # before pyaudio
 sudo apt-get install portaudio19-dev
 # before pygame
 sudo apt-get install python-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl1.2-dev libsmpeg-dev python-numpy subversion libportmidi-dev ffmpeg libswscale-dev libavformat-dev libavcodec-dev
+
+
+
 
 
 # Setup to get usb speaker to work on card 1 of raspberry pi
@@ -16,6 +18,20 @@ pcm.!default  {
 ctl.!default {
  type hw card 1
 }
+
+
+
+
+# To ensure the boot script works do the following to your environment
+sudo cp /home/pi/.aws/ /root/
+sudo pip3 install virtualenvwrapper virtualenv
+# Add the following to pi's .profile
+export REDIS_INSTANCE_IP='xxx.xxx.xxx.xxx'
+export AWS_DEFAULT_REGION=us-east-1
+export WORKON_HOME=/home/pi/Desktop/envs/
+source /usr/local/bin/virtualenvwrapper.sh
+
+
 
 
 # Installing OpenCV on Raspberry Pi
