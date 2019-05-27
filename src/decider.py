@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
 import datetime
 from rekognition_ops import RekognitionOps
@@ -44,10 +45,11 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps,GreetingOps):
 if __name__=='__main__':
     # Set default logging level
     logging.basicConfig(
-        stream=sys.stdout,
+        handlers=[RotatingFileHandler('/home/pi/PersonalizedGreeter.log', maxBytes=100000, backupCount=0)],
         level=logging.INFO,
         format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
+    #stream=sys.stdout
     obj = Decider()
     dayCnt = 0
     day = datetime.datetime.today().strftime('%Y-%m-%d')
