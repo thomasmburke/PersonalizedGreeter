@@ -4,6 +4,7 @@ from imutils.video import VideoStream, FPS
 import cv2
 import imutils
 import logging
+import os
 
 # Set logger
 logger = logging.getLogger(__name__)
@@ -22,7 +23,9 @@ class CameraOps:
         sleep(2)
 
     def detect_face(self):
-        detector = cv2.CascadeClassifier('../HaarCascade/haarcascade_frontalface_default.xml')
+        haarCascadePath = os.path.dirname(__file__) + '/../HaarCascade/haarcascade_frontalface_default.xml'
+        logger.info('haar cascade path: {}'.format(haarCascadePath))
+        detector = cv2.CascadeClassifier(haarCascadePath)
         logger.info('Resuming video stream...')
         
         while True:
