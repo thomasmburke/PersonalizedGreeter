@@ -35,10 +35,9 @@ class CameraOps:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # Detect faces from grayscale frame
             faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(55,55))
-            #print(faceRects)
-            logger.info('face localized at the following location {}'.format(faceRects))
             # Check if there are any faces in the current frame
             if len(faceRects):
+                logger.info('face localized at the following location {}'.format(faceRects))
                 # Show photo if pi has display
                 #cv2.imshow("Frame", frame)
                 #key = cv2.waitKey(1) & 0xFF
