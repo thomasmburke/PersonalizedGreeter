@@ -26,18 +26,23 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps,GreetingOps):
         SpeakerOps.__init__(self)
         GreetingOps.__init__(self)
 
-    def orchestrate(self):
+    def orchestrate(self, dayCnt):
         # Call the camera module to take a picture
         faceFrame = self.detect_face()
-        # Find the name of the person in the picture
-        personName = self.search_faces_by_image(faceFrame)
-        logger.info('personName={}'.format(personName))
-        if not personName: return None
-        logger.info('Name of person identified={}'.format(personName))
-        # Look up a custom greeting for the guest
-        greeting = self.get_greeting(personName)
-        # Turn the greeting into a speech stream
-        greetingAudio = self.synthesize_speech(text=greeting)
+        # Used to make the application stay free of AWS charges
+        if dayCnt > 160:
+            logger.warning('Total Usage for the day has been exceeded!')
+            greetingAudio = self.synthesize_speech(text='<speak>Total usage for the day has been exceeded!</speak>')
+        else:
+            # Find the name of the person in the picture
+            personName = self.search_faces_by_image(faceFrame)
+            logger.info('personName={}'.format(personName))
+            if not personName: return None
+            logger.info('Name of person identified={}'.format(personName))
+            # Look up a custom greeting for the guest
+            greeting = self.get_greeting(personName)
+            # Turn the greeting into a speech stream
+            greetingAudio = self.synthesize_speech(text=greeting)
         # Say greeting to user
         self.play_audio_stream(greetingAudio['AudioStream'])
         return personName
@@ -63,12 +68,7 @@ if __name__=='__main__':
             day = datetime.datetime.today().strftime('%Y-%m-%d')
             dayCnt = 0
             logger.info('rekognized the start of a new day: {0} and resetting day count to {1}'.format(day, dayCnt))
-        # Used to make the application stay free of AWS charges
-        if dayCnt <= 160:
-            obj.orchestrate()
-            dayCnt += 1
-            logger.info('Total number of faces recokognized today={} of 160 that are allowed per day'.format(dayCnt))
-            logger.info('Todays face rekognition count is for this day: {}'.format(day))
-        else:
-            logger.warning('Total Usage for the day has been exceeded!')
-
+        obj.orchestrate(dayCnt)
+        dayCnt += 1
+        logger.info('Total number of faces recokognized today={} of 160 that are allowed per day'.format(dayCnt))
+        logger.info('Todays face rekognition count is for this day: {}'.format(day))
