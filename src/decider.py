@@ -57,6 +57,7 @@ if __name__=='__main__':
     day = datetime.datetime.today().strftime('%Y-%m-%d')
     while True:
         # Wait 4 seconds before being able to greet again
+        logger.info('waiting 4 seconds before looking for faces again...')
         sleep(4)
         if day != datetime.datetime.today().strftime('%Y-%m-%d'):
             day = datetime.datetime.today().strftime('%Y-%m-%d')
