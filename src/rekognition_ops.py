@@ -167,7 +167,7 @@ class RekognitionOps:
             the face that Amazon Rekognition used for the input image.
         """
         try:
-            logger.info('Dectecting faces in image and adding them to Collection: {0}'.format(self.collectionId))
+            logger.info('Dectecting faces in image and searching for them in Collection: {0}'.format(self.collectionId))
             # Add face via bytes object
             response = self.rekognitionClient.search_faces_by_image(
                 CollectionId=self.collectionId,  # Collection to add the face to
