@@ -27,6 +27,9 @@ class CameraOps:
         logger.info('haar cascade path: {}'.format(haarCascadePath))
         detector = cv2.CascadeClassifier(haarCascadePath)
         logger.info('Resuming video stream...')
+        # Setting up frame detection counter to raise the threshold for a face match
+        frameDetectCnt = 0
+        logger.info('initializing frame detection count to 0')
         
         while True:
             frame = self.vs.read()
@@ -37,9 +40,13 @@ class CameraOps:
             faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(55,55))
             # Check if there are any faces in the current frame
             if len(faceRects):
-                logger.info('face localized at the following location {}'.format(faceRects))
-                # Show photo if pi has display
-                #cv2.imshow("Frame", frame)
-                #key = cv2.waitKey(1) & 0xFF
-                success, encodedImage = cv2.imencode(self.fileFormat, frame)
-                return encodedImage.tobytes()
+                frameDetectCnt += 1
+                logger.info('frame detection count={}'.format(frameDetectionCnt))
+                if frameDetectCnt >= 10:
+                    logger.info('face localized at the following location {}'.format(faceRects))
+                    # Show photo if pi has display
+                    #cv2.imshow("Frame", frame)
+                    #key = cv2.waitKey(1) & 0xFF
+                    success, encodedImage = cv2.imencode(self.fileFormat, frame)
+                    return encodedImage.tobytes()
+            else: frameDetectCnt = 0
