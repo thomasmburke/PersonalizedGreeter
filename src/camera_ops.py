@@ -37,7 +37,7 @@ class CameraOps:
             # Convert the input frame from BGR to grayscale - purpose: to detect faces
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # Detect faces from grayscale frame
-            faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=7, minSize=(55,55))
+            faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(55,55))
             # Check if there are any faces in the current frame
             if len(faceRects):
                 frameDetectCnt += 1
