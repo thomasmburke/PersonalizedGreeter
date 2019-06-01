@@ -47,6 +47,7 @@ class GreetingOps:
             return seasonalGreetingWithName
         else: 
             defaultGreeting = self.redisClient.srandmember(self.defaultGreetings)
+            logger.info(defaultGreeting)
             defaultGreetingWithName = defaultGreeting.decode('utf-8').format(personName)
             logger.info('Retrieved default greeting: {}'.format(defaultGreetingWithName))
             return defaultGreetingWithName
