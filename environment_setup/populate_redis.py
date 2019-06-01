@@ -72,6 +72,7 @@ Diwali
 with open('./greetings/greetings.pkl', 'wb') as defaultPickleFile:
     pickle.dump(greetings, defaultPickleFile)
 redisClient = redis.Redis(host=os.getenv('REDIS_INSTANCE_IP'), port=6379, db=0)
+redisClient.flushall()
 for key, greeting in greetings.items():
     redisClient.sadd(key, *greeting)
     mems = redisClient.smembers(name=key)
