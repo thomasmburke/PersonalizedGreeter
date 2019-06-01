@@ -7,6 +7,7 @@ from polly_ops import PollyOps
 from camera_ops import CameraOps
 from speaker_ops import SpeakerOps
 from greeting_ops import GreetingOps
+from time import sleep
 
 # Set logger
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps,GreetingOps):
         faceFrame = self.detect_face()
         # Find the name of the person in the picture
         personName = self.search_faces_by_image(faceFrame)
+        logger.info('personName={}'.format(personName))
         if not personName: return None
         logger.info('Name of person identified={}'.format(personName))
         # Look up a custom greeting for the guest
@@ -53,7 +55,9 @@ if __name__=='__main__':
     obj = Decider()
     dayCnt = 0
     day = datetime.datetime.today().strftime('%Y-%m-%d')
-    while True: 
+    while True:
+        # Wait 4 seconds before being able to greet again
+        sleep(4)
         if day != datetime.datetime.today().strftime('%Y-%m-%d'):
             day = datetime.datetime.today().strftime('%Y-%m-%d')
             dayCnt = 0
