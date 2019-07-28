@@ -9,8 +9,8 @@ A greeting device that welcomes your friends by name the first time it sees them
 ## Current Functionality
 * Greet person by name after detecting their face in a frame of the continuous video stream
 * Greet with joke/fact option
-## Future Functionality
 * Include Seasonal greetings
+## Future Functionality
 * Personal recorded greetings for specific people
 * Walk up music for specific people
     * Prompt people to pick their walk up music
