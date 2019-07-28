@@ -1,0 +1,22 @@
+sudo apt-get update
+# Install redis
+sudo apt-get -y install redis-server
+# Verify that redis is running
+ps -f -u redis
+
+# edit the configuration file
+sudo nano /etc/redis/redis.conf
+# change the following values
+#enable anyone to access (not recommended but okay for dev)
+bind 0.0.0.0
+# disable snapshots
+stop-writes-on-bgsave-error no
+
+# stop and restart redis
+sudo systemctl stop redis.service
+sudo systemctl start redis.service
+
+ps -f -u redis
+
+# open network ports
+tcp:6379
