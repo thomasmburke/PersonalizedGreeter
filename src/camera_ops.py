@@ -42,7 +42,7 @@ class CameraOps:
             if len(faceRects):
                 frameDetectCnt += 1
                 logger.info('frame detection count={}'.format(frameDetectCnt))
-                if frameDetectCnt >= 10:
+                if frameDetectCnt >= 7:
                     logger.info('face localized at the following location {}'.format(faceRects))
                     # Show photo if pi has display
                     #cv2.imshow("Frame", frame)

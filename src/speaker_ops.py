@@ -1,5 +1,9 @@
 import io
 import pygame
+import logging
+
+# Set logger
+logger = logging.getLogger(__name__)
 
 class SpeakerOps:
     """
@@ -13,6 +17,7 @@ class SpeakerOps:
     # Convert boto3 audio stream to Bytes stream
     # for compatibility with pygame
     def play_audio_stream(self, audioStream):
+        logger.info('Converting boto3 audio stream to bytes stream for compatibility with pygame...')
         audio = io.BytesIO(audioStream.read())
         pygame.mixer.music.load(audio)
         pygame.mixer.music.play()

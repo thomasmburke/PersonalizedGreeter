@@ -27,6 +27,7 @@ class PollyOps:
                 Text=text,
                 VoiceId='Joanna',
                 TextType='ssml')
+            logger.info('Polly successfully returned speech audio.')
             return response
         except ClientError as e:
             return e.response
