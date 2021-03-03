@@ -33,6 +33,7 @@ class Decider(CameraOps, RekognitionOps,PollyOps,SpeakerOps,GreetingOps):
         if dayCnt > 160:
             logger.warning('Total Usage for the day has been exceeded!')
             greetingAudio = self.synthesize_speech(text='<speak>Total usage for the day has been exceeded!</speak>')
+            personName = 'Total Quota exceeded for the day'
         else:
             # Find the name of the person in the picture
             personName = self.search_faces_by_image(faceFrame)
