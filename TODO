@@ -1,0 +1,4 @@
+- An issue exists on boot where root runs the decider but doesn't detect faces properly.
+     This can be resolved by sshing in as the pi user, activating the virtualenv, kill -9 existing python pid, and rerunning the decider
+- Would be nice to make Polly speak if an exception is encountered and specify where it happened
+- Polly cold start issues?
