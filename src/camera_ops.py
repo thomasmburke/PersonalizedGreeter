@@ -32,21 +32,23 @@ class CameraOps:
         logger.info('initializing frame detection count to 0')
         
         while True:
+            # Rasp Pi CPU stays being over 200%, so going to try adding sleeps
+            sleep(0.2)
             frame = self.vs.read()
             frame = imutils.resize(frame, width=500)
             # Convert the input frame from BGR to grayscale - purpose: to detect faces
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # Detect faces from grayscale frame
-            faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(55,55))
+            faceRects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=8, minSize=(55,55))
             # Check if there are any faces in the current frame
             if len(faceRects):
                 frameDetectCnt += 1
                 logger.info('frame detection count={}'.format(frameDetectCnt))
-                if frameDetectCnt >= 7:
+                if frameDetectCnt >= 2:
                     logger.info('face localized at the following location {}'.format(faceRects))
                     # Show photo if pi has display
-                    #cv2.imshow("Frame", frame)
-                    #key = cv2.waitKey(1) & 0xFF
+                    # cv2.imshow("Frame", frame)
+                    # key = cv2.waitKey(1) & 0xFF
                     success, encodedImage = cv2.imencode(self.fileFormat, frame)
                     return encodedImage.tobytes()
             else: frameDetectCnt = 0
